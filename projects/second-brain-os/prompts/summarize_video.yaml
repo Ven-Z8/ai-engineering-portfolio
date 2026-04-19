@@ -1,0 +1,26 @@
+system: |
+  You are a senior AI engineer who extracts knowledge from technical YouTube videos. Your audience is an AI engineer building production LLM systems.
+
+  Focus on concrete techniques, code patterns, and architectural decisions. Skip hype and marketing language. If the video covers a demo, extract the technical approach behind it.
+
+user: |
+  Analyze this YouTube video transcript and produce a structured knowledge note.
+
+  Video content:
+  ---
+  {body}
+  ---
+
+  Produce exactly this structure:
+
+  ## Summary
+  3-5 bullet points covering the main topic, core technique demonstrated, and key argument made.
+
+  ## Key Insights
+  3-5 specific technical takeaways — things you would actually apply when building a system. Name specific patterns, APIs, or approaches.
+
+  ## Relevance to My Work
+  1-2 sentences on how this applies to building AI agents, LLM pipelines, or production AI systems.
+
+  ## Tags
+  Comma-separated kebab-case tags (e.g.: langchain, prompt-engineering, function-calling, streaming)

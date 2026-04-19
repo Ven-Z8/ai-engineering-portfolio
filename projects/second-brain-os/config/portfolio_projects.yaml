@@ -1,0 +1,125 @@
+projects:
+  - folder: "00-SecondBrainOS"
+    name: "Second Brain OS"
+    description: "Daily knowledge harness — ingests GitHub, YouTube, web, RSS into Obsidian"
+    key_technologies: [obsidian, sqlite, anthropic, structlog, typer, rich, feedparser]
+
+  - folder: "01-ContextForge"
+    name: "ContextForge"
+    description: "Context engineering toolkit — token budgeting, prompt compression, context window optimization"
+    key_technologies: [tiktoken, anthropic, context-window, prompt-engineering, compression]
+
+  - folder: "02-RAGBench-Pro"
+    name: "RAGBench Pro"
+    description: "RAG pipeline evaluation framework with recall/precision/latency benchmarks"
+    key_technologies: [rag, retrieval, embeddings, evaluation, benchmarking, vector-search, langchain]
+
+  - folder: "03-AgentOrchestra"
+    name: "AgentOrchestra"
+    description: "Multi-agent orchestration system with conductor pattern and parallel agent execution"
+    key_technologies: [multi-agent, langgraph, orchestration, anthropic, tool-use, async]
+
+  - folder: "04-MemoryOS"
+    name: "MemoryOS"
+    description: "Persistent agent memory system — episodic, semantic, and working memory layers"
+    key_technologies: [memory, embeddings, vector-db, qdrant, sqlite, anthropic]
+
+  - folder: "05-AutoResearch-v2"
+    name: "AutoResearch v2"
+    description: "Autonomous research agent — searches, synthesizes, and writes structured reports"
+    key_technologies: [research-agent, web-search, synthesis, anthropic, langchain, tool-use]
+
+  - folder: "06-MCPForge-Suite"
+    name: "MCPForge Suite"
+    description: "Model Context Protocol server builder and testing toolkit"
+    key_technologies: [mcp, model-context-protocol, tool-server, anthropic, claude-desktop]
+
+  - folder: "07-MCPGuard"
+    name: "MCPGuard"
+    description: "Security layer for MCP servers — input validation, rate limiting, audit logging"
+    key_technologies: [mcp, security, validation, rate-limiting, audit]
+
+  - folder: "08-EvalEngine"
+    name: "EvalEngine"
+    description: "LLM evaluation framework — custom metrics, judge models, regression tracking"
+    key_technologies: [evaluation, evals, judge-model, metrics, anthropic, benchmarking]
+
+  - folder: "09-GuardStack"
+    name: "GuardStack"
+    description: "LLM safety and guardrails stack — prompt injection, content filtering, output validation"
+    key_technologies: [safety, guardrails, prompt-injection, content-filter, anthropic]
+
+  - folder: "10-LLMScope"
+    name: "LLMScope"
+    description: "Observability platform for LLM applications — cost, latency, quality dashboards"
+    key_technologies: [observability, monitoring, cost-tracking, latency, logging, structlog]
+
+  - folder: "11-GraphRAG-Engine"
+    name: "GraphRAG Engine"
+    description: "Knowledge graph-enhanced RAG — entities, relationships, graph traversal for retrieval"
+    key_technologies: [graphrag, knowledge-graph, rag, neo4j, embeddings, retrieval]
+
+  - folder: "12-PromptOpt"
+    name: "PromptOpt"
+    description: "Automated prompt optimization — DSPy-style compile-and-evaluate loops"
+    key_technologies: [prompt-optimization, dspy, evaluation, anthropic, few-shot]
+
+  - folder: "13-ToolForge"
+    name: "ToolForge"
+    description: "Tool/function-calling framework with automatic schema generation and testing"
+    key_technologies: [tool-use, function-calling, schema, pydantic, anthropic]
+
+  - folder: "14-StructOut"
+    name: "StructOut"
+    description: "Structured output extraction from LLMs — JSON, Pydantic, validation pipelines"
+    key_technologies: [structured-output, pydantic, json, extraction, anthropic]
+
+  - folder: "15-SemanticRouter"
+    name: "SemanticRouter"
+    description: "Semantic routing layer — classifies queries and routes to specialized agents"
+    key_technologies: [routing, embeddings, classification, multi-agent, semantic-search]
+
+  - folder: "16-DocIQ"
+    name: "DocIQ"
+    description: "Document intelligence pipeline — PDF/code/markdown ingestion with Q&A"
+    key_technologies: [document-processing, pdf, qa, rag, anthropic, extraction]
+
+  - folder: "17-SynthGen"
+    name: "SynthGen"
+    description: "Synthetic data generation for fine-tuning and evaluation datasets"
+    key_technologies: [synthetic-data, fine-tuning, dataset, anthropic, generation]
+
+  - folder: "18-SelfHeal"
+    name: "SelfHeal"
+    description: "Self-healing agent system — detects failures, diagnoses root cause, auto-recovers"
+    key_technologies: [self-healing, error-recovery, agent, monitoring, anthropic]
+
+  - folder: "19-RedTeamKit"
+    name: "RedTeamKit"
+    description: "LLM red-teaming toolkit — adversarial prompt testing, jailbreak detection"
+    key_technologies: [red-teaming, adversarial, security, evaluation, anthropic]
+
+  - folder: "20-LiveRAG"
+    name: "LiveRAG"
+    description: "Real-time RAG with streaming retrieval and incremental response generation"
+    key_technologies: [rag, streaming, real-time, retrieval, embeddings, anthropic]
+
+  - folder: "21-SemanticCache"
+    name: "SemanticCache"
+    description: "Semantic caching layer for LLM calls — embedding similarity, cache hit optimization"
+    key_technologies: [caching, embeddings, semantic-similarity, optimization, anthropic]
+
+  - folder: "22-BrowserAgent"
+    name: "BrowserAgent"
+    description: "Web automation agent — Playwright-based browser control with LLM planning"
+    key_technologies: [browser-automation, playwright, web-agent, tool-use, anthropic]
+
+  - folder: "23-SQLAgent-Pro"
+    name: "SQLAgent Pro"
+    description: "Natural language to SQL agent with schema understanding and query explanation"
+    key_technologies: [sql, nl2sql, text-to-sql, database, anthropic, tool-use]
+
+  - folder: "24-DebateArena"
+    name: "DebateArena"
+    description: "Multi-agent debate system — adversarial LLM agents, judge evaluation, synthesis"
+    key_technologies: [debate, multi-agent, adversarial, evaluation, anthropic, langgraph]

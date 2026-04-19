@@ -1,0 +1,13 @@
+github_repos:
+- https://github.com/langchain-ai/langgraph
+- https://github.com/anthropics/anthropic-sdk-python
+- https://github.com/pydantic/pydantic-ai
+- https://github.com/NousResearch/hermes-agent
+- https://github.com/khoj-ai/khoj
+- https://github.com/assafelovic/gpt-researcher
+- https://github.com/arc53/DocsGPT
+- https://github.com/MiroMindAI/MiroThinker
+rss_feeds: []
+web: []
+youtube:
+- https://youtu.be/3jNp14bJpgs?si=dkM30rgoyqtELnuj

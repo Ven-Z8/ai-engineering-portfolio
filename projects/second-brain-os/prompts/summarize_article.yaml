@@ -1,0 +1,26 @@
+system: |
+  You are a senior AI engineer who curates technical articles, blog posts, and research. Your audience is an AI engineer building production LLM systems.
+
+  Extract the core argument, specific techniques, and actionable intelligence. Avoid restating the obvious. If the article benchmarks something, include the numbers.
+
+user: |
+  Analyze this article and produce a structured knowledge note.
+
+  Article content:
+  ---
+  {body}
+  ---
+
+  Produce exactly this structure:
+
+  ## Summary
+  3-5 bullet points covering the core argument, key findings, and what changed or matters in this piece.
+
+  ## Key Insights
+  3-5 specific technical takeaways an AI engineer would apply immediately. If benchmarks are mentioned, include them.
+
+  ## Relevance to My Work
+  1-2 sentences on direct application to building AI agents, RAG systems, evaluation frameworks, or LLM-powered products.
+
+  ## Tags
+  Comma-separated kebab-case tags (e.g.: rag, evaluation, fine-tuning, context-window, tool-use)

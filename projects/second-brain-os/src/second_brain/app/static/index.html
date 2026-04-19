@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Second Brain OS</title>
+<style>
+  :root {
+    --bg: #0f0f11;
+    --surface: #18181b;
+    --border: #27272a;
+    --accent: #6366f1;
+    --accent-hover: #818cf8;
+    --text: #e4e4e7;
+    --muted: #71717a;
+    --green: #4ade80;
+    --yellow: #fbbf24;
+    --red: #f87171;
+    --github: #6e7681;
+    --youtube: #ef4444;
+    --rss: #f97316;
+    --web: #60a5fa;
+    --radius: 8px;
+    --font-mono: "SF Mono", "Menlo", monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 52px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+  }
+  .header-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+  .header-title span { color: var(--accent); }
+  .status-dot { font-size: 12px; color: var(--green); }
+
+  /* Tab bar */
+  .tabs {
+    display: flex;
+    gap: 2px;
+    padding: 8px 20px 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .tab {
+    padding: 7px 16px;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color .15s, border-color .15s;
+    user-select: none;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* Content area */
+  .content { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+  .panel { display: none; flex: 1; flex-direction: column; padding: 20px; overflow: hidden; }
+  .panel.active { display: flex; }
+
+  /* Input row */
+  .input-row { display: flex; gap: 8px; align-items: center; }
+  input[type="text"], textarea {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color .15s;
+  }
+  input[type="text"]:focus, textarea:focus { border-color: var(--accent); }
+  input[type="text"] { flex: 1; height: 42px; }
+  textarea { flex: 1; resize: none; font-family: var(--font-mono); font-size: 12px; }
+
+  /* Type badge */
+  .type-badge {
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: var(--border);
+    color: var(--muted);
+    white-space: nowrap;
+    transition: all .15s;
+    min-width: 80px;
+    text-align: center;
+  }
+  .type-badge.github { background: #1e2227; color: var(--github); }
+  .type-badge.youtube { background: #2d1515; color: var(--youtube); }
+  .type-badge.rss { background: #2d1d10; color: var(--rss); }
+  .type-badge.web { background: #131d2d; color: var(--web); }
+
+  /* Buttons */
+  .btn {
+    height: 42px;
+    padding: 0 18px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background .15s, opacity .15s;
+    white-space: nowrap;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+  .btn-secondary:hover { color: var(--text); border-color: var(--muted); }
+  .btn-run { background: #166534; color: var(--green); }
+  .btn-run:hover { background: #14532d; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+
+  /* Log / output */
+  .log {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-y: auto;
+    margin-top: 12px;
+    color: var(--text);
+  }
+  .log .entry { margin-bottom: 4px; }
+  .log .entry.ok { color: var(--green); }
+  .log .entry.warn { color: var(--yellow); }
+  .log .entry.err { color: var(--red); }
+  .log .entry.info { color: var(--muted); }
+
+  /* Source chips */
+  .sources-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 12px;
+  }
+  .source-group { margin-bottom: 8px; }
+  .source-group-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .source-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .source-chip .url { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .source-chip .chip-type { font-size: 10px; color: var(--muted); flex-shrink: 0; }
+
+  /* Chat */
+  .chat-msgs {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .chat-msg {
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 90%;
+  }
+  .chat-msg.user { background: var(--accent); color: #fff; align-self: flex-end; }
+  .chat-msg.system { background: var(--surface); border: 1px solid var(--border); align-self: flex-start; font-family: var(--font-mono); font-size: 12px; }
+
+  /* Run tab */
+  .run-btns { display: flex; gap: 8px; margin-bottom: 16px; }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+  }
+  .stat-card .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .stat-card .value { font-size: 22px; font-weight: 600; margin-top: 4px; }
+
+  .label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .label-row span { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .section-gap { margin-top: 14px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">⬡ <span>Second Brain</span> OS</div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button class="btn btn-run" id="headerRunBtn" onclick="headerRun()" style="height:34px;font-size:12px;font-weight:600;padding:0 16px">▶ Run All</button>
+    <div class="status-dot" id="statusDot">● Ready</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('add')">Add Links</div>
+  <div class="tab" onclick="switchTab('sources')">Sources</div>
+  <div class="tab" onclick="switchTab('chat')">Search</div>
+  <div class="tab" onclick="switchTab('run')">Run</div>
+</div>
+
+<div class="content">
+
+  <!-- ADD LINKS -->
+  <div class="panel active" id="panel-add">
+    <div class="label-row">
+      <span>Drop a link — GitHub, YouTube, RSS, or web doc</span>
+    </div>
+    <div class="input-row">
+      <input type="text" id="urlInput" placeholder="https://github.com/... or youtube.com/watch?v=..." oninput="onUrlChange()" onkeydown="if(event.key==='Enter') addUrl()" autofocus>
+      <div class="type-badge" id="typeBadge">🌐 web</div>
+      <button class="btn btn-primary" onclick="addUrl()">Add</button>
+      <button class="btn btn-run" onclick="addAndRun()">Add + Run Now</button>
+    </div>
+    <div class="log" id="addLog">
+      <div class="entry info">Paste any link above and hit Add.</div>
+    </div>
+  </div>
+
+  <!-- SOURCES -->
+  <div class="panel" id="panel-sources">
+    <div class="label-row">
+      <span>Tracked sources</span>
+      <button class="btn btn-secondary" style="height:32px;font-size:12px" onclick="loadSources()">Refresh</button>
+    </div>
+    <div class="sources-grid" id="sourcesGrid">
+      <div class="entry info" style="font-size:12px;color:var(--muted)">Loading…</div>
+    </div>
+  </div>
+
+  <!-- CHAT / SEARCH -->
+  <div class="panel" id="panel-chat">
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="chat-msg system">Search your vault notes by keyword. Results will show matching files.</div>
+    </div>
+    <div class="input-row">
+      <input type="text" id="chatInput" placeholder="Search vault notes…" onkeydown="if(event.key==='Enter') searchVault()">
+      <button class="btn btn-primary" onclick="searchVault()">Search</button>
+    </div>
+  </div>
+
+  <!-- RUN -->
+  <div class="panel" id="panel-run">
+    <div class="run-btns">
+      <button class="btn btn-run" id="runBtn" onclick="runPipeline(false)" style="font-size:14px;font-weight:600;padding:0 24px;height:48px">▶  Run Pipeline</button>
+      <button class="btn btn-secondary" onclick="runPipeline(true)" style="height:48px">Dry Run</button>
+    </div>
+    <div class="stats-grid" id="statsGrid" style="display:none">
+      <div class="stat-card"><div class="label">Notes Created</div><div class="value" id="stat-created">—</div></div>
+      <div class="stat-card"><div class="label">Skipped</div><div class="value" id="stat-skipped">—</div></div>
+      <div class="stat-card"><div class="label">Cost</div><div class="value" id="stat-cost">—</div></div>
+      <div class="stat-card"><div class="label">Duration</div><div class="value" id="stat-duration">—</div></div>
+    </div>
+    <div class="label-row section-gap">
+      <span>Output</span>
+      <button class="btn btn-secondary" style="height:28px;font-size:11px" onclick="clearRunLog()">Clear</button>
+    </div>
+    <div class="log" id="runLog">
+      <div class="entry info">Click Run Pipeline to start.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const TYPE_EMOJIS = { github: '🐙', youtube: '▶️', rss: '📡', web: '🌐' };
+const TYPE_LABELS = { github_repos: 'GitHub', youtube: 'YouTube', rss_feeds: 'RSS', web: 'Web' };
+const TYPE_KEY_MAP = { github: 'github_repos', youtube: 'youtube', rss: 'rss_feeds', web: 'web' };
+
+function detectUrlType(url) {
+  if (/github\.com\/[^/]+\/[^/]+/.test(url)) return 'github';
+  if (/(youtube\.com\/watch|youtu\.be\/)/.test(url)) return 'youtube';
+  if (/\.(rss|atom|xml)(\?|$)/.test(url) || url.includes('rss') || url.includes('feeds')) return 'rss';
+  return 'web';
+}
+
+function onUrlChange() {
+  const url = document.getElementById('urlInput').value.trim();
+  const badge = document.getElementById('typeBadge');
+  if (!url) { badge.className = 'type-badge'; badge.textContent = '🌐 web'; return; }
+  const t = detectUrlType(url);
+  badge.className = 'type-badge ' + t;
+  badge.textContent = TYPE_EMOJIS[t] + ' ' + t;
+}
+
+function addUrl(runAfter = false) {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) return;
+  const type = detectUrlType(url);
+  window.pywebview.api.add_url(url, type).then(result => {
+    logAdd(result.message, result.ok ? 'ok' : 'warn');
+    if (result.ok) {
+      document.getElementById('urlInput').value = '';
+      onUrlChange();
+    }
+    if (runAfter && result.ok) runFor(type, url);
+  });
+}
+
+function addAndRun() { addUrl(true); }
+
+function runFor(type, url) {
+  setStatus('⏳ Running…', 'var(--yellow)');
+  setBusy(true);
+  logAdd('Running pipeline for ' + url + '…', 'info');
+  window.pywebview.api.run_single(type, url).then(result => {
+    const out = result.output || (result.ok ? 'Done.' : 'Pipeline failed — check Terminal for details.');
+    logAdd(out, result.ok ? 'ok' : 'err');
+    setStatus(result.ok ? '● Ready' : '✗ Failed', result.ok ? 'var(--green)' : 'var(--red)');
+    setBusy(false);
+  }).catch(err => {
+    logAdd('Error: ' + err, 'err');
+    setStatus('✗ Failed', 'var(--red)');
+    setBusy(false);
+  });
+}
+
+function logAdd(msg, cls = '') {
+  const log = document.getElementById('addLog');
+  const div = document.createElement('div');
+  div.className = 'entry ' + cls;
+  div.textContent = msg;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+// Sources tab
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', ['add','sources','chat','run'][i] === name);
+  });
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (name === 'sources') loadSources();
+}
+
+function loadSources() {
+  window.pywebview.api.get_sources().then(sources => {
+    const grid = document.getElementById('sourcesGrid');
+    grid.innerHTML = '';
+    let total = 0;
+    for (const [key, label] of Object.entries(TYPE_LABELS)) {
+      const items = sources[key] || [];
+      total += items.length;
+      const group = document.createElement('div');
+      group.className = 'source-group';
+      group.innerHTML = `<div class="source-group-label">${label} (${items.length})</div>`;
+      for (const url of items) {
+        const chip = document.createElement('div');
+        chip.className = 'source-chip';
+        chip.innerHTML = `<span class="url">${url}</span>`;
+        group.appendChild(chip);
+      }
+      grid.appendChild(group);
+    }
+    if (total === 0) {
+      grid.innerHTML = '<div style="color:var(--muted);font-size:13px">No sources tracked yet. Go to Add Links to add some.</div>';
+    }
+  });
+}
+
+// Search tab
+function searchVault() {
+  const q = document.getElementById('chatInput').value.trim();
+  if (!q) return;
+  addChatMsg(q, 'user');
+  document.getElementById('chatInput').value = '';
+  window.pywebview.api.search_vault(q).then(result => {
+    addChatMsg(result, 'system');
+  });
+}
+
+function addChatMsg(text, cls) {
+  const msgs = document.getElementById('chatMsgs');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + cls;
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// Run tab
+function runPipeline(dryRun = false) {
+  setBusy(true);
+  setStatus('⏳ Running…', 'var(--yellow)');
+  logRun('Starting pipeline' + (dryRun ? ' (dry run)' : '') + '…', 'info');
+
+  window.pywebview.api.run_pipeline(dryRun).then(result => {
+    const out = result.output || (result.ok ? 'Done.' : 'Pipeline failed — check Terminal for details.');
+    logRun(out, result.ok ? 'ok' : 'err');
+    setBusy(false);
+    setStatus(result.ok ? '● Ready' : '✗ Failed', result.ok ? 'var(--green)' : 'var(--red)');
+
+    if (result.stats) {
+      const s = result.stats;
+      document.getElementById('statsGrid').style.display = 'grid';
+      document.getElementById('stat-created').textContent = s.notes_created ?? '—';
+      document.getElementById('stat-skipped').textContent = s.notes_skipped ?? '—';
+      document.getElementById('stat-cost').textContent = '$' + (s.cost_usd || 0).toFixed(4);
+      document.getElementById('stat-duration').textContent = s.duration ?? '—';
+    }
+  }).catch(err => {
+    logRun('Error: ' + err, 'err');
+    setBusy(false);
+    setStatus('✗ Failed', 'var(--red)');
+  });
+}
+
+function logRun(msg, cls = '') {
+  const log = document.getElementById('runLog');
+  const div = document.createElement('div');
+  div.className = 'entry ' + cls;
+  div.textContent = msg;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+function clearRunLog() {
+  document.getElementById('runLog').innerHTML = '';
+}
+
+function setStatus(text, color) {
+  const el = document.getElementById('statusDot');
+  el.textContent = text;
+  el.style.color = color;
+}
+
+function setBusy(busy) {
+  document.getElementById('headerRunBtn').disabled = busy;
+  document.getElementById('headerRunBtn').textContent = busy ? '⏳ Running…' : '▶ Run All';
+  const runBtn = document.getElementById('runBtn');
+  if (runBtn) { runBtn.disabled = busy; runBtn.textContent = busy ? '⏳ Running…' : '▶  Run Pipeline'; }
+}
+
+function headerRun() {
+  switchTab('run');
+  runPipeline(false);
+}
+
+// Init
+window.addEventListener('pywebviewready', () => {
+  loadSources();
+});
+</script>
+</body>
+</html>

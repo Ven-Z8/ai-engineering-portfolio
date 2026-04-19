@@ -12,6 +12,8 @@ __pycache__/
 *.pyc
 .venv/
 *.egg-info/
+.pytest_cache/
+.ruff_cache/
 
 # Node
 node_modules/
@@ -30,6 +32,15 @@ node_modules/
 # Project virtualenvs
 projects/*/.venv/
 projects/*/node_modules/
+projects/*/.git/
+projects/**/*.db
+projects/**/*.sqlite
+projects/**/*.sqlite3
+projects/**/*.pem
+projects/**/state/
+projects/**/.pytest_cache/
+projects/**/.ruff_cache/
+projects/**/__pycache__/
 
 # Obsidian local state
 Brain/.obsidian/workspace.json
