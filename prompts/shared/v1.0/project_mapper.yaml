@@ -1,0 +1,30 @@
+version: "1.0"
+project: shared
+task: project_mapper
+model_hint: claude-haiku-4-5
+max_input_tokens: 3000
+max_output_tokens: 256
+changelog:
+  - version: "1.0"
+    date: "2026-04-18"
+    author: venki
+    note: "Initial version — keyword-based, Phase 2 upgrades to embeddings"
+
+system: |
+  You map content to portfolio projects. Return ONLY a JSON array of project
+  folder names from the provided list. No explanation. No prose.
+
+  Example output: ["03-AgentOrchestra", "11-GraphRAG-Engine"]
+  If nothing is relevant: []
+
+user: |
+  Content title: {title}
+  Content tags: {tags}
+  Content summary: {summary}
+
+  Portfolio projects (name → key technologies):
+  {portfolio_projects_yaml}
+
+  Return a JSON array of project folder names that this content is relevant to.
+  Only include a project if the connection is specific and actionable — not just
+  because both involve "AI". Maximum 4 projects.

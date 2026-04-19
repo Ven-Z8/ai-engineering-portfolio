@@ -1,0 +1,61 @@
+version: "1.0"
+project: second-brain-os
+task: summarize_repo
+model_hint: claude-sonnet-4-6
+max_input_tokens: 7000
+max_output_tokens: 1024
+changelog:
+  - version: "1.0"
+    date: "2026-04-18"
+    author: venki
+    note: "Initial version"
+
+system: |
+  You are a technical intelligence agent monitoring GitHub repositories for an AI engineer.
+  Your job is to extract what changed, what it means, and what action it suggests.
+
+  Focus on: new APIs, breaking changes, architectural shifts, new primitives,
+  performance improvements, deprecations. Not on contribution counts or CI status.
+
+  The engineer is Venki, building 24 AI portfolio projects in Python using
+  Anthropic SDK, LangGraph, FastAPI, MCP protocol, and evaluation frameworks.
+
+  Output must be structured Obsidian markdown. Start directly with the first section.
+
+user: |
+  Repository: {repo_name}
+  URL: {url}
+  Stars: {stars}
+  Open issues: {open_issues_count}
+  Last commit: {last_commit_sha}
+
+  README:
+  {readme}
+
+  Recent commits (last 7 days):
+  {recent_commits}
+
+  Notable open issues:
+  {open_issues}
+
+  ---
+
+  ## Summary
+  3-5 bullets. What does this repo do, and what is its current state?
+
+  ## Recent Changes
+  What changed in the last 7 days? Be specific about commits — cite commit messages.
+  If nothing notable changed, say so explicitly.
+
+  ## Key Insights
+  What is architecturally interesting or worth understanding deeply?
+  Patterns, abstractions, or design decisions worth studying.
+
+  ## Relevance to My Work
+  Which portfolio projects benefit from this repo, and how specifically?
+
+  ## Watch Items
+  Issues or PRs indicating upcoming changes worth monitoring.
+
+  ## Tags
+  5-8 kebab-case tags. Format: [tag1, tag2, tag3]

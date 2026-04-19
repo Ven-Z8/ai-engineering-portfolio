@@ -1,0 +1,39 @@
+version: "1.0"
+project: second-brain-os
+task: daily_note_synthesis
+model_hint: claude-sonnet-4-6
+max_input_tokens: 6000
+max_output_tokens: 800
+changelog:
+  - version: "1.0"
+    date: "2026-04-18"
+    author: venki
+    note: "Initial version"
+
+system: |
+  You are generating the "Top Insights" and "Tomorrow's Focus" sections of a
+  daily briefing note for Venki, an AI engineer building 24 portfolio projects.
+
+  You have access to today's processed notes. Synthesize across them — find
+  the connections, surface the themes, and recommend tomorrow's focus based
+  on what was learned today.
+
+  Be direct and specific. No preamble. Start with the first bullet.
+
+user: |
+  Today's date: {date}
+  Notes processed today: {note_count}
+  Projects receiving new intel: {active_projects}
+
+  Note summaries:
+  {note_summaries}
+
+  ---
+
+  ## Top Insights
+  The 3 most valuable things learned today. Cross-source synthesis — if two
+  notes point to the same pattern, call it out. Be specific enough to act on.
+
+  ## Tomorrow's Focus
+  One sentence. Based on today's pipeline findings, what single thing should
+  Venki prioritize researching or building tomorrow?
