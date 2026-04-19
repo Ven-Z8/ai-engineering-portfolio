@@ -3,8 +3,19 @@
 - Task: `second-brain-os-project-0`
 - Current Owner: `codex`
 - Status: `active`
-- Last Updated: `2026-04-19 01:08 UTC`
-- Next Action: `Claude should continue from the current Project #0 baseline in the isolated worktree, using the approved Second Brain OS spec/plan and the task file as source of truth. Recommended next implementation slice: improve summarization quality, then expand toward the next source type or broader pipeline/run logging from the approved plan.`
+- Last Updated: `2026-04-19 - codex`
+- Next Action: `Continue from committed SBO project at projects/second-brain-os. Next slice: build LangGraph sbo research loop on top of existing EmbeddingGemma + ChromaDB vault index and sbo ask foundation.`
+
+## Current Owner
+codex
+
+## Status
+active
+
+## Next Action
+Build the research agent architecture on top of the committed SBO baseline: LangGraph research loop + existing ChromaDB/EmbeddingGemma vault index + report writing into Brain/02-Projects/<project>/research.md. MCP stdio server comes after the CLI research loop works.
+
+---
 
 ## Objective
 
@@ -112,7 +123,7 @@ Decision recorded on 2026-04-19: keep `second-brain-os` as the clean standalone 
 - Blockers: Implementation is in the isolated worktree and has not been merged or committed yet., Current summarization is still intentionally simple; richer summary quality is the next visible improvement.
 - Next: Claude should continue from the current Project #0 baseline in the isolated worktree, using the approved Second Brain OS spec/plan and the task file as source of truth. Recommended next implementation slice: improve summarization quality, then expand toward the next source type or broader pipeline/run logging from the approved plan.
 
-### 2026-04-18 - claude-sonnet-4-6
+### 2026-04-19 - claude-sonnet-4-6 (CURRENT HANDOFF TO CODEX)
 
 - Summary: Major implementation session — expanded Project #0 from a minimal GitHub-only vertical slice to a near-complete production harness. Added real Claude-powered summarization via `core/llm_client.py` (AsyncAnthropic + OpenRouter fallback + cost tracking), `processing/summarizer.py` (YAML prompt loading, section parsing), `processing/context_budget.py` (tiktoken-based token enforcement before every API call), `processing/project_mapper.py` (keyword-based portfolio project matching), three new agents (YouTubeAgent, WebAgent, RSSAgent), two new vault writers (DailyNoteWriter, IndexUpdater/pipeline-log), an async pipeline with `asyncio.gather` for parallel agent execution and per-agent failure isolation, full CLI expansion (sbo add github/youtube/feed/web, sbo status, sbo config), portfolio config YAML (all 24 projects), prompts YAML for repo/video/article, Makefile, .env.example, README.md. All existing tests fixed for the new async pipeline; 14 new test files; 42/42 passing. Lint clean via ruff.
 - Files: src/second_brain/core/llm_client.py, src/second_brain/core/models.py, src/second_brain/core/db.py, src/second_brain/processing/summarizer.py, src/second_brain/processing/context_budget.py, src/second_brain/processing/project_mapper.py, src/second_brain/agents/youtube_agent.py, src/second_brain/agents/web_agent.py, src/second_brain/agents/rss_agent.py, src/second_brain/vault/daily_note.py, src/second_brain/vault/index_updater.py, src/second_brain/orchestration/pipeline.py, src/second_brain/cli/main.py, config/sources.yaml, config/portfolio_projects.yaml, prompts/summarize_repo.yaml, prompts/summarize_video.yaml, prompts/summarize_article.yaml, Makefile, .env.example, README.md, pyproject.toml, tests/unit/test_*.py (14 files)
@@ -120,3 +131,90 @@ Decision recorded on 2026-04-19: keep `second-brain-os` as the clean standalone 
 - Blockers: Implementation is in worktree, not yet merged or committed to main. Real-network ingestion (actual GitHub clone, YouTube transcript, RSS fetch) untested — unit tests use mocks and fake agents. First live run requires ANTHROPIC_API_KEY in .env.
 - Next: 1. Commit the worktree branch. 2. Do a first real live run `sbo run` with ANTHROPIC_API_KEY set to validate end-to-end. 3. Phase 2 items from spec: sbo fetch --url (force re-fetch with diff detection), sbo ask (FTS5 search + Claude synthesis), model routing per task type (Haiku for classification), MCP server exposing vault tools. 4. LaunchAgent setup script for 7am daily automation.
 
+
+### 2026-04-19 - claude-sonnet-4-6 (HANDOFF TO CODEX)
+
+- Summary: Major workspace cleanup + architecture decision session. SBO now has a working Mac app, async pipeline, real Claude summarization, 42 passing tests. Today: cleaned the entire workspace (deleted second-brain/, obsidian-daily-agent, kalshi bots kept by user), consolidated to ONE vault at Brain/, added PORTFOLIO.md (24-project source of truth), rewrote AGENTS.md (setup instructions for Claude Code, Cursor, VS Code, Codex), reset git history with fresh init. Key architecture decision: SBO needs to evolve from a dumb ingestion pipeline into a smart personal research agent.
+
+- Files changed this session:
+  - `/Volumes/VeN/Claude-Code-Work/PORTFOLIO.md` — CREATED: full 24-project spec, build order, standards
+  - `/Volumes/VeN/Claude-Code-Work/AGENTS.md` — REWRITTEN: setup instructions for all tools
+  - `/Volumes/VeN/Claude-Code-Work/CLAUDE.md` — updated vault path to Brain/
+  - `/Volumes/VeN/Claude-Code-Work/Brain/` — cleaned junk files (HEARTBEAT, SOUL, IDENTITY, TOOLS, USER, kalshi API note)
+  - `/Volumes/VeN/Claude-Code-Work/Brain/02-Projects/` — CREATED: 25 portfolio project subfolders (00-24)
+  - `.worktrees/.../config/sources.yaml` — removed HN RSS feed
+  - `.worktrees/.../src/second_brain/core/settings.py` — VAULT_PATH updated to Brain/
+  - `.worktrees/.../src/second_brain/app/mac_app.py` — VAULT_PATH updated to Brain/, "▶ Run All" header button added
+  - `.worktrees/.../src/second_brain/app/static/index.html` — UI: always-visible Run All button, better error feedback, setBusy() helper
+  - `.worktrees/.../projects/second-brain-os/.env` — VAULT_PATH updated to Brain/
+
+- Commands run: sbo-app (Mac app running, PID 42749), Brain cleanup, git reinit
+
+- Blockers:
+  - `rm -rf Brain/.git` needs to be run from Terminal (sandbox blocked). Then `git add Brain/ && git commit -m "init: clean workspace"` to finish the fresh git.
+  - `rm -rf /Volumes/VeN/Claude-Code-Work/second-brain` — user may or may not have run this yet, verify.
+  - SBO worktree NOT merged to main yet (branch: chore/seed-obsidian-agent-workspace). Still lives in .worktrees/second-brain-os-project-0/projects/second-brain-os/
+
+- Architecture decision (IMPORTANT — read before touching SBO):
+  Venki decided the current SBO pipeline is "not efficient" — it's a dumb push pipeline. The agreed direction is to rebuild it as a smart personal research agent. Architecture (from GPT Researcher + STORM + Perplexica research):
+
+  ```
+  sbo research "context window engineering"
+       ↓
+  ProjectContext        ← reads PORTFOLIO.md, knows current project spec
+       ↓
+  QueryDecomposer       ← generates 3-5 sub-questions
+       ↓
+  ┌────┴────┐
+  VaultSearch  WebFetch  ← parallel asyncio.gather, vault FIRST
+  (ChromaDB)  (httpx)
+  └────┬────┘
+       ↓
+  ChunkReranker         ← semantic similarity, keep top-K
+       ↓
+  Synthesizer           ← partial summary
+       ↓
+  GapAnalyzer ──────→ (gaps exist, depth<2?) → loop back
+       ↓
+  ReportWriter          → Brain/02-Projects/[project]/research.md
+
+  Exposed as MCP stdio server:
+    search_vault(query)     ← Claude Code calls this mid-session
+    deep_research(topic)    ← full loop above
+    project_brief(name)     ← "what do I know about ContextForge?"
+  ```
+
+  Stack: LangGraph + ChromaDB (embed Brain/ notes) + httpx + Anthropic SDK + MCP Python SDK
+  Interface: pure CLI (no Mac app needed for this). Mac app can stay for adding links.
+
+- Next action options for Codex (pick one):
+  1. **OPTION A — Build the research agent** (recommended if 2+ hours available):
+     - Add ChromaDB to SBO: `uv add chromadb sentence-transformers`
+     - Create `src/second_brain/vault/index.py` — VaultIndex class that embeds Brain/ markdown files
+     - Create `src/second_brain/research/agent.py` — LangGraph graph with the loop above
+     - Create `src/second_brain/mcp_server.py` — MCP stdio server exposing 3 tools
+     - CLI: `sbo research "topic"` + `sbo ask "question"`
+     - Test: `sbo research "context window engineering"` → research.md in Brain/02-Projects/01-ContextForge/
+
+  2. **OPTION B — Start Portfolio Project #01 ContextForge** (if starting fresh is cleaner):
+     - `mkdir projects/01-contextforge && cd projects/01-contextforge && uv init`
+     - Follow PORTFOLIO.md → Project 01 spec (ContextEngine, SemanticScorer, BudgetAllocator, CompressionEngine)
+     - Benchmark target: HotpotQA, 40%+ cost reduction, RAGAS faithfulness > 0.84
+     - This is the highest-signal project in the portfolio
+
+  3. **OPTION C — Finish SBO basics first** (if you want to close it out before moving on):
+     - `sbo ask "query"` — FTS5 search over Brain/ + Claude synthesis (no LangGraph needed, simpler)
+     - LaunchAgent script at `scripts/setup_launchagent.sh` for 7am daily automation
+     - Merge worktree to main: `git merge chore/seed-obsidian-agent-workspace`
+
+- Vault location: `/Volumes/VeN/Claude-Code-Work/Brain/` (single source of truth)
+- SBO worktree: `/Volumes/VeN/Claude-Code-Work/.worktrees/second-brain-os-project-0/projects/second-brain-os/`
+- Portfolio spec: `/Volumes/VeN/Claude-Code-Work/PORTFOLIO.md`
+
+### 2026-04-19 - codex
+
+- Summary: Committed the clean Second Brain OS baseline into the main workspace under `projects/second-brain-os` and stopped relying on the broken ignored `.worktrees` git metadata. Added vault-first semantic search foundation: `sbo index`, `sbo ask`, ChromaDB persistent vector store, EmbeddingGemma default with MiniLM fallback, indexed-file hash tracking, and unit coverage. Verified Hugging Face access for `google/embeddinggemma-300m`; real smoke indexing against `Brain/` produced 18 files and 315 chunks with temporary state. Added local ignores for old unrelated project folders and local tool folders to keep workspace status clean without deleting user files.
+- Files: projects/second-brain-os/, docs/superpowers/plans/2026-04-19-sbo-vault-semantic-search.md, .gitignore, docs/agent-handoff/ACTIVE_TASKS.md, docs/agent-handoff/tasks/second-brain-os-project-0.md
+- Commands: uv sync --extra dev, .venv/bin/python -m pytest tests/unit -q, .venv/bin/ruff check src/ tests/, EMBEDDING_MODEL=google/embeddinggemma-300m EMBEDDING_TRUNCATE_DIM=128 .venv/bin/sbo index, git commit -m "feat: add second brain os semantic search"
+- Blockers: Live `sbo ask` has not been run because it calls Claude and spends tokens. Brain is currently tracked as a git submodule entry in the root repo, so vault content changes do not appear as normal file diffs from this repo.
+- Next: Implement `sbo research "context window engineering"` with LangGraph: load project context from PORTFOLIO.md, decompose questions, search vault first, fetch external gaps, synthesize cited report, and write `Brain/02-Projects/01-ContextForge/research.md`.

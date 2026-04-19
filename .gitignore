@@ -23,8 +23,13 @@ node_modules/
 .vscode/
 
 # Claude Code state
+.claude/
 .claude/session.log
 .claude/debug/
+
+# Local scratch/tools
+.openrouter_api_key.example
+claude-usage-viewer/
 
 # Worktrees (managed separately)
 .worktrees/
@@ -33,6 +38,9 @@ node_modules/
 projects/*/.venv/
 projects/*/node_modules/
 projects/*/.git/
+projects/kalshi-crypto-bot-2/
+projects/kalshi-crypto-bot-demo2/
+projects/nl2sql-viz/
 projects/**/*.db
 projects/**/*.sqlite
 projects/**/*.sqlite3
