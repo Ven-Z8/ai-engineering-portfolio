@@ -51,5 +51,6 @@ projects/**/.ruff_cache/
 projects/**/__pycache__/
 
 # Obsidian local state
+Brain/
 Brain/.obsidian/workspace.json
 Brain/.obsidian/workspace-mobile.json
