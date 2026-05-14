@@ -20,6 +20,12 @@ I build AI systems that are measurable, inspectable, and useful beyond the demo.
 
 The full project map lives in [PORTFOLIO.md](PORTFOLIO.md).
 
+## Featured Project
+
+| Project | Status | What it shows |
+| --- | --- | --- |
+| [NL2SQL Viz](https://github.com/Ven-Z8/nl2sql-viz) | Shipped | Natural-language analytics over a demo SaaS dataset, guarded SQL generation, chart planning, FastAPI backend, and Next.js frontend |
+
 ## Engineering Standards
 
 - Python 3.12 with `uv`
