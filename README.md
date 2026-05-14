@@ -25,6 +25,7 @@ The full project map lives in [PORTFOLIO.md](PORTFOLIO.md).
 | Project | Status | What it shows |
 | --- | --- | --- |
 | [NL2SQL Viz](https://github.com/Ven-Z8/nl2sql-viz) | Shipped | Natural-language analytics over a demo SaaS dataset, guarded SQL generation, chart planning, FastAPI backend, and Next.js frontend |
+| [ContextIQ](https://github.com/Ven-Z8/contextiq) | Shipped | Context-engineered RAG over complex enterprise documents, citation-preserving retrieval, token-aware context packets, eval traces, and Anthropic answer synthesis |
 
 ## Engineering Standards
 
