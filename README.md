@@ -1,6 +1,6 @@
 # Venkat AI Engineering Portfolio
 
-Production-grade AI systems built in public over a focused 60-day execution cycle.
+Production-grade AI systems built through a focused public portfolio sprint.
 
 This repository is the command center for 24 portfolio projects targeting senior AI, ML, and agentic engineering roles. The work emphasizes context engineering, multi-agent orchestration, evaluation systems, retrieval quality, guardrails, and reliable LLM application infrastructure.
 
@@ -43,15 +43,14 @@ The full project map lives in [PORTFOLIO.md](PORTFOLIO.md).
 └── plugins/                  # local engineering playbooks
 ```
 
-## 60-Day Build Loop
+## Build Cadence
 
-The daily automation is intentionally conservative:
+The repository is maintained as a real engineering portfolio:
 
-1. Choose one scoped portfolio improvement.
-2. Make a real code, docs, test, eval, benchmark, or CI change.
+1. Pick a scoped improvement from the portfolio roadmap.
+2. Ship a code, docs, test, eval, benchmark, or CI change.
 3. Run the most relevant lightweight verification.
-4. Write a daily progress note.
+4. Record progress and the next useful task.
 5. Commit with a conventional message.
-6. Push to GitHub.
 
-The goal is not activity for its own sake. The goal is a visible trail of increasingly strong AI engineering work.
+The goal is a visible trail of increasingly strong AI engineering work: practical systems, clear tradeoffs, and evidence that the work runs.
