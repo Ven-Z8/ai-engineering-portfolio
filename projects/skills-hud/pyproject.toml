@@ -1,6 +1,6 @@
 [project]
 name = "skills-hud"
-version = "0.1.0"
+version = "0.2.0"
 description = "Local macOS HUD that shows installed Claude Code skills and how often you actually invoke them."
 readme = "README.md"
 requires-python = ">=3.11"
